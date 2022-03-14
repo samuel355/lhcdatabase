@@ -3,34 +3,37 @@
 $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
 $message = '';
 
-if(isset($_POST["email"])){
-    $query = "INSERT INTO clients
-        (first_name, last_name, email, phone) VALUES 
-        (:first_name, :last_name, :email, :mobile_no)
-        ";
+if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+    $first_name  = $_POST["first_name"];
+    $last_name  = $_POST["last_name"];
+    $phone   = $_POST["mobile_no"];
+    $email   = $_POST["email"];
+
+    $query = " INSERT INTO clients (firstname, lastname, phone, email) 
+        VALUES (:first_name, :last_name, :phone, :email)";
 
     $user_data = array(
-    ':first_name'  => $_POST["first_name"],
-    ':last_name'  => $_POST["last_name"],
-    ':email'   => $_POST["email"],
-    ':mobile_no'  => $_POST["mobile_no"]
+        ':first_name'  => $_POST["first_name"],
+        ':last_name'  => $_POST["last_name"],
+        ':phone'   => $_POST["mobile_no"],
+        ':email'   => $_POST["email"]
     );
     $statement = $connect->prepare($query);
-    if($statement->execute($user_data))
-    {
-    $message = '
-    <div class="alert alert-success">
-    Registration Completed Successfully
-    </div>
-    ';
-    }
-    else
-    {
-    $message = '
-    <div class="alert alert-success">
-    There is an error in Registration
-    </div>
-    ';
+
+    if($statement->execute($user_data)){
+        $message = '
+        <div class="alert alert-success">
+            Registration Completed Successfully
+        </div>
+        ';
+
+    }else{
+        $message = '
+            <div class="alert alert-success">
+            There is an error in Registration
+            </div>
+        ';
     }
 }
 ?>

@@ -1,40 +1,91 @@
 <?php include_once "include/head.php" ?>
 <?php
-    session_start();
-    ob_start();
 
     $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
+
     $message = '';
 
-    if(isset($_POST['email'])){
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
 
-        $query = " INSERT INTO clients (firstname, lastname, phone, email) 
-            VALUES (:first_name, :last_name, :phone, :email)";
+        $title= $_POST['title'];
+        $firstname = $_POST['first_name'];
+        $lastname = $_POST['last_name'];
+        $phone= $_POST['mobile_no'];
+        $email = $_POST['email'];
+        $id_type= $_POST['card-type'];
+        $id_number= $_POST['id_number'];
 
-        $user_data = array(
-            ':first_name'  => $_POST["first_name"],
-            ':last_name'  => $_POST["last_name"],
-            ':phone'   => $_POST["mobile_no"],
-            ':email'   => $_POST["email"]
-        );
-        $statement = $connect->prepare($query);
+        //$passport_pc= trim($_FILES['passport_pic']); /////////////
+        //$agent= trim($_POST['agent']);
+        //$date_added= trim($_POST['date']);
+        //$number_of_plots= trim($_POST['number-of-plots']);
+        //$total_amount= trim($_POST['total-amount']);
+        //$amount_payed= trim($_POST['amount-payed']);
+        //$amount_remaining= trim($_POST['amount-remaining']);
+        //$plot_details= trim($_POST['plot_details']);
+        //$allocation= trim($_POST['allocation']);
+        //$site_plan= trim($_POST['site_plan']);
+        //$cadastral_plan= trim($_POST['cadastral_plan']);
+        //$search= trim($_POST['search']);
+        //$lease_preparation= trim($_POST['lease_preparation']);
+        //$registration_lc= trim($_POST['registration_lc']);
 
-        if($statement->execute($user_data)){
-            $message = '
-            <div class="alert alert-success">
-                Registration Completed Successfully
-            </div>
-            ';
+        try{   
+            //$query = " INSERT INTO clients (title, firstname, lastname, phone, email, id_type, id_number, agent, date_added, number_of_plots, total_amount, amount_payed, amount_remaining, plot_details, allocation, site_plan, cadastral_plan, search, lease_preparation, registration_lc) 
+            //    VALUES (:title, :first_name, :last_name, :mobile_no, :email, :id_type, :id_number, :agent, :date_added, :number_of_plots, :total_amount, :amount_payed, :amount_remaining, :plot_details, :allocation, :site_plan, :cadastral_plan, :search, :lease_preparation, :registration_lc)";
+            //$stmt = $connect->prepare($query);
 
-        }else{
+            $query = " INSERT INTO clients (title, firstname, lastname, phone, email, id_type, id_number) 
+                VALUES (:title, :first_name, :last_name, :mobile_no, :email, :id_type, :id_number)";
+            $stmt = $connect->prepare($query);
+
+            $stmt->execute([
+                ':title' => $title,
+                ':first_name' => $firstname,
+                ':last_name' => $lastname,
+                ':mobile_no' => $phone,
+                ':email' => $email,
+                ':id_type' => $id_type,
+                ':id_number' => $id_number,
+                
+                //':passport_pic' => $passport_pc, ///////
+                //':agent' => $agent,
+                //':date_added' => $date_added,
+                //':number_of_plots' => $number_of_plots,
+                //':total_amount' => $total_amount,
+                //':amount_payed' => $amount_payed,
+                //':amount_remaining' => $amount_remaining,
+                //':plot_details' => $plot_details,
+                //':allocation' => $allocation,
+                //':site_plan' => $site_plan,
+                //':cadastral_plan' => $cadastral_plan,
+                //':search' => $search,
+                //':lease_preparation' => $lease_preparation,
+                //':registration_lc' => $registration_lc
+            ]);
+
+            $client_id = $connect->lastInsertId();
+
             $message = '
                 <div class="alert alert-success">
-                There is an error in Registration
+                    Clients details added successfully
+                </div>
+            ';
+
+        }catch(PDOException $e){
+            $message = $e->getMessage();
+
+            $message = '
+                <div class="alert alert-danger">
+                    '.$e->getMessage().'
                 </div>
             ';
         }
     }
+
+
 ?>
+
 <body>
     <nav class="navbar-fixed">
         <div class="breadcrumbs">
@@ -153,7 +204,7 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>email</label>
-                                                                            <input name="title" id="email" type="text" placeholder="Email">
+                                                                            <input name="email" id="email" type="text" placeholder="Email">
                                                                             <span id="error_email" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
@@ -164,7 +215,7 @@
                                                                             <label>ID Type * </label>
                                                                             <div class="selector-head id_type_container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
-                                                                                <select name="card-type" class="user-chosen-select" id="id_type" name="id_type">
+                                                                                <select name="card-type" class="user-chosen-select" id="id_type">
                                                                                     <option value="none">Select ID</option>
                                                                                     <option value="voter-id">Voter ID </option>
                                                                                     <option value="passport">Passport</option>
