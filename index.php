@@ -1,5 +1,21 @@
 <?php include_once "include/head.php" ?>
+<?php
+    session_start();
+    $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
+    if(isset($_SESSION['unique_id'])){
+        $unique_id = $_SESSION['unique_id'];
 
+        $query_user = " SELECT * FROM users WHERE unique_id = :unique_id";
+        $stmt_user = $connect->prepare($query_user);
+        $stmt_user->execute([
+            ':unique_id' => $unique_id,
+        ]);
+
+        $row_user = $stmt_user->fetch();
+    }else{
+        header('location: index.php');
+    }
+?>
 <body>
 
     <nav class="navbar-fixed">

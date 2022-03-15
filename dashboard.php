@@ -1,5 +1,21 @@
 <?php include_once "include/head.php" ?>
+<?php
+    session_start();
+    $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
+    if(isset($_SESSION['unique_id'])){
+        $unique_id = $_SESSION['unique_id'];
 
+        $query_user = " SELECT * FROM users WHERE unique_id = :unique_id";
+        $stmt_user = $connect->prepare($query_user);
+        $stmt_user->execute([
+            ':unique_id' => $unique_id,
+        ]);
+
+        $row_user = $stmt_user->fetch();
+    }else{
+        header('location: index.php');
+    }
+?>
 <body>
 
     <nav class="navbar-fixed">
@@ -29,8 +45,8 @@
                     <div class="dashboard-sidebar">
                         <div class="user-image">
                             <img src="assets/images/blog/blog1.jpg" alt="#">
-                            <h3>Steve Aldridge
-                                <span><a href="javascript:void(0)">@username</a></span>
+                            <h3><?php echo $row_user['fullname'] ?>
+                                <span><a href="javascript:void(0)"><?php echo $row_user['email'] ?> </a></span>
                             </h3>
                         </div>
                         <div class="dashboard-menu">

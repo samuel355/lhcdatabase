@@ -1,5 +1,21 @@
 <?php include_once "include/head.php" ?>
+<?php
+    session_start();
+    $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
+    if(isset($_SESSION['unique_id'])){
+        $unique_id = $_SESSION['unique_id'];
 
+        $query_user = " SELECT * FROM users WHERE unique_id = :unique_id";
+        $stmt_user = $connect->prepare($query_user);
+        $stmt_user->execute([
+            ':unique_id' => $unique_id,
+        ]);
+
+        $row_user = $stmt_user->fetch();
+    }else{
+        header('location: index.php');
+    }
+?>
 <body>
 
     <nav class="navbar-fixed">
@@ -26,31 +42,32 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-12">
-
                     <div class="dashboard-sidebar">
                         <div class="user-image">
                             <img src="assets/images/blog/blog1.jpg" alt="#">
-                            <h3>Steve Aldridge
-                                <span><a href="javascript:void(0)">@username</a></span>
+                            <h3><?php echo $row_user['fullname'] ?>
+                                <span><a href="javascript:void(0)"><?php echo $row_user['email'] ?> </a></span>
                             </h3>
                         </div>
                         <div class="dashboard-menu">
-                            <?php include_once "include/nav.php" ?>
+                            <ul>
+                                <li><a href="dashboard.php" ><i class="lni lni-dashboard"></i> Dashboard</a></li>
+                                <li><a href="users.php"><i class="lni lni-users "></i> Clients</a></li>
+                                <li><a href="add-user.php"><i class="lni lni-circle-plus"></i> Add Client</a></li>
+                            </ul>
                             <div class="button">
-                                <a class="btn" href="javascript:void(0)">Logout</a>
+                                <a class="btn" href="logout.php">Logout</a>
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-lg-9 col-md-8 col-12">
                     <div class="main-content">
                         <div class="dashboard-block close-content mt-0">
-                            <h2>Delete Your Account</h2>
-                            <h4>Are you sure, you want to delete your account?</h4>
+                            <h2>Client Detail</h2>
+                            <h5>Wrong client id correspondent. Try editing client detail again and if the problem persist, contact the developer</h5>
                             <div class="button">
-                                <a href="javascript:void(0)" class="btn">Delete Account</a>
-                                <a href="javascript:void(0)" class="btn btn-alt">Cancle</a>
+                                <a href="users.php" class="btn">Clients</a>
                             </div>
                         </div>
                     </div>

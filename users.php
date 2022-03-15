@@ -1,7 +1,23 @@
 <?php include_once "include/head.php" ?>
 
-<body>
+<?php
+    session_start();
+    $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
+    if(isset($_SESSION['unique_id'])){
+        $unique_id = $_SESSION['unique_id'];
 
+        $query_user = " SELECT * FROM users WHERE unique_id = :unique_id";
+        $stmt_user = $connect->prepare($query_user);
+        $stmt_user->execute([
+            ':unique_id' => $unique_id,
+        ]);
+
+        $row_user = $stmt_user->fetch();
+    }else{
+        header('location: index.php');
+    }
+?>
+<body>
     <nav class="navbar-fixed">
         <div class="breadcrumbs">
             <div class="container">
@@ -25,13 +41,12 @@
     <section class="dashboard section"  style="margin-top: 3rem;">
         <div class="container">
             <div class="row">
-                <div class="col-lg-3 col-md-12 col-12">
-
+                <div class="col-lg-3 col-md-4 col-12">
                     <div class="dashboard-sidebar">
                         <div class="user-image">
                             <img src="assets/images/blog/blog1.jpg" alt="#">
-                            <h3>Steve Aldridge
-                                <span><a href="javascript:void(0)">@username</a></span>
+                            <h3><?php echo $row_user['fullname'] ?>
+                                <span><a href="javascript:void(0)"><?php echo $row_user['email'] ?> </a></span>
                             </h3>
                         </div>
                         <div class="dashboard-menu">
@@ -45,7 +60,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-lg-9 col-md-12 col-12">
                     <div class="main-content">
@@ -75,104 +89,79 @@
                                         <div class="col-lg-2 col-md-2 col-12">
                                             <h5>Todo List</h5>
                                         </div>
-                                        <div class="col-lg-3 col-md-3 col-12 align-right">
-                                            <h5>Action</h5>
+                                        <div class="col-lg-3 col-md-3 col-12">
+                                            <h5 class="text-center">Action</h5>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="single-item-list">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="item-image">
-                                                <img src="assets/images/blog/blog1.jpg" alt="#">
-                                                <div class="content">
-                                                    <h3 class="title"><a href="javascript:void(0)"><span class="text-dark">Name: </span>Mr. Samuel Osei Adu</a></h3>
-                                                    <span class="price"><span class="text-dark">Phone: </span>  0246562377</span>
-                                                    <p><span class="text-dark">Email: </span> asamuel355@gmail.com</p>
-                                                    <p><span class="text-dark">Address: </span> Plot 16, Ekuaba Estate, Spintex-Accra </p>
-                                                    <p><span class="text-dark">Agent: </span> L.H.C </p>
-                                                    <p><span class="text-dark">ID Type: </span> Passport </p>
-                                                    <p><span class="text-dark">ID Number: </span> G-150-89793</p>
+                                <?php
+                                    include_once "php/config.php";
+
+                                    $sql = "SELECT * FROM clients ORDER BY id DESC";
+                                    $query = mysqli_query($conn, $sql);
+                                    $output = "";
+
+                                    if(mysqli_num_rows($query) == 0){
+                                        $output .= " No Clients have been added yet";
+                                    }elseif(mysqli_num_rows($query) > 0){
+                                        while($row = mysqli_fetch_assoc($query)){
+                                            if($row['amount_payed'] == ''){
+                                                $amount_payed = 0;
+                                            }
+                                            
+                                            
+                                            $amount_remaining = $row['total_amount'] - $amount_payed;
+                                            $output .= '
+                                                <div class="single-item-list">
+                                                    <div class="row align-items-center">
+                                                        <div class="col-lg-4 col-md-4 col-12">
+                                                            <div class="item-image">
+                                                                <img src="assets/images/blog/blog1.jpg" alt="#">
+                                                                <div class="content">
+                                                                    <h3  class="title"><a style="color: #690308; font-weight: bold" href="javascript:void(0)"><span class="text-dark">Name: </span> ' .$row['title']. " " . $row['firstname']. " " . $row['lastname'].'</a></h3>
+                                                                    <p style="color: #690308; font-weight: bold" class="price"> <span class="text-dark">Phone: </span> '.$row['phone'].' </p>
+                                                                    <p style="color: #690308; font-weight: bold"><span class="text-dark">Email: </span> '.$row['email'].' </p>
+                                                                    <p style="color: #690308; font-weight: bold"><span class="text-dark">ID Type: </span> '.$row['id_type'].' </p>
+                                                                    <p style="color: #690308; font-weight: bold"><span class="text-dark">ID Number: </span> '.$row['id_number'].' </p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-3 col-md-3 col-12">
+                                                            <div class="content">
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Agent: </span> '.$row['agent'].'</p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Plots: </span> '.$row['number_of_plots'].' </p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Total Amount: </span> GHS. '.$row['total_amount'].' </p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Amount Payed: </span> GHS. '.$row['amount_payed'].' </p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Amount Remaining: </span> GHS. '.$amount_remaining.' </p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Plot Details: </span> '.$row['plot_details'].' </p>
+                                                            </div>
+                                                        </div>
+                
+                                                        <div class="col-lg-3 col-md-3 col-12">
+                                                            <div class="content">
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Allocation: </span> '.$row['allocation'].'</p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Site Plan: </span> '.$row['site_plan'].'</p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Search: </span> '.$row['search'].' </p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Cadastral Plan: </span> '.$row['cadastral_plan'].' </p>
+                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Registration: </span> '.$row['registration_lc'].'</p>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-2 col-md-2 col-12">
+                                                            <ul class="action-button">
+                                                                <li title="Edit"><a href="update-client.php?id='.$row['id'].'"><i class="lni lni-pencil"></i></a></li>
+                                                                <li title="View/Update"><a href="update-client.php?id='.$row['id'].'"><i class="lni lni-eye"></i></a></li>
+                                                                <li title="Delete"><a href="javascript:void(0)"><i class="lni lni-close"></i></a></li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-12">
-                                            <div class="content">
-                                                <p><span class="text-dark">Plots: </span> 1</p>
-                                                <p><span class="text-dark">Amount</span> GHs. 35000 </p>
-                                                <p><span class="text-dark">Amount Payed </span> 25000 </p>
-                                                <p><span class="text-dark">Amount Remaining </span> 10000</p>
-                                                <p><span class="text-dark">Plot Details</span> 14, Osei Tutu Street</p>
-                                            </div>
-                                        </div>
+                                            ';
+                                        }
+                                    }
+                                    echo $output;
+                                ?>
 
-                                        <div class="col-lg-3 col-md-3 col-12">
-                                            <div class="content">
-                                                <p><span class="text-dark">Allocation: </span> No </p>
-                                                <p><span class="text-dark">Site Plan: </span> Yes</p>
-                                                <p><span class="text-dark">Search</span> Yes </p>
-                                                <p><span class="text-dark">Cadastral Plan</span> No </p>
-                                                <p><span class="text-dark">Registration</span> No</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-12">
-                                            <ul class="action-button">
-                                                <li title="Edit"><a href="javascript:void(0)"><i class="lni lni-pencil"></i></a></li>
-                                                <li title="View/Update"><a href="javascript:void(0)"><i class="lni lni-eye"></i></a></li>
-                                                <li title="Delete"><a href="javascript:void(0)"><i class="lni lni-close"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                
-                                </div>
-
-
-                                <div class="single-item-list">
-                                    <div class="row align-items-center">
-                                        <div class="col-lg-4 col-md-4 col-12">
-                                            <div class="item-image">
-                                                <img src="assets/images/blog/blog1.jpg" alt="#">
-                                                <div class="content">
-                                                    <h3 class="title"><a href="javascript:void(0)"><span class="text-dark">Name: </span>Mr. Samuel Osei Adu</a></h3>
-                                                    <span class="price"><span class="text-dark">Phone: </span>  0246562377</span>
-                                                    <p><span class="text-dark">Email: </span> asamuel355@gmail.com</p>
-                                                    <p><span class="text-dark">Address: </span> Plot 16, Ekuaba Estate, Spintex-Accra </p>
-                                                    <p><span class="text-dark">Agent: </span> L.H.C </p>
-                                                    <p><span class="text-dark">ID Type: </span> Passport </p>
-                                                    <p><span class="text-dark">ID Number: </span> G-150-89793</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3 col-md-3 col-12">
-                                            <div class="content">
-                                                <p><span class="text-dark">Plots: </span> 1</p>
-                                                <p><span class="text-dark">Amount</span> GHs. 35000 </p>
-                                                <p><span class="text-dark">Amount Payed </span> 25000 </p>
-                                                <p><span class="text-dark">Amount Remaining </span> 10000</p>
-                                                <p><span class="text-dark">Plot Details</span> 14, Osei Tutu Street</p>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="col-lg-3 col-md-3 col-12">
-                                            <div class="content">
-                                                <p><span class="text-dark">Allocation: </span> No </p>
-                                                <p><span class="text-dark">Site Plan: </span> Yes</p>
-                                                <p><span class="text-dark">Search</span> Yes </p>
-                                                <p><span class="text-dark">Cadastral Plan</span> No </p>
-                                                <p><span class="text-dark">Registration</span> No</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-12">
-                                            <ul class="action-button">
-                                                <li title="Edit"><a href="javascript:void(0)"><i class="lni lni-pencil"></i></a></li>
-                                                <li title="View/Update"><a href="javascript:void(0)"><i class="lni lni-eye"></i></a></li>
-                                                <li title="Delete"><a href="javascript:void(0)"><i class="lni lni-close"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                
-                                </div>
 
                                 <div class="pagination left">
                                     <ul class="pagination-list">
