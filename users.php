@@ -43,11 +43,11 @@
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-12">
                     <div class="dashboard-sidebar">
-                        <div class="user-image">
-                            <img src="assets/images/blog/blog1.jpg" alt="#">
-                            <h3><?php echo $row_user['fullname'] ?>
-                                <span><a href="javascript:void(0)"><?php echo $row_user['email'] ?> </a></span>
-                            </h3>
+                        <div class="m-3">
+                            <h5>
+                                <?php echo $row_user['fullname'] ?>
+                                <p><?php echo $row_user['email'] ?> </p>
+                            </h5>
                         </div>
                         <div class="dashboard-menu">
                             <ul>

@@ -51,9 +51,109 @@
             ';
         }
     }
-    //Update Client Records after form submission.
+
 ?>
 
+<?php
+
+    //Update Client Records after form submission.
+
+    $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
+
+    $message = '';
+
+    if($_SERVER['REQUEST_METHOD'] == 'POST'){
+
+        $update_id = $_POST['client_id'];
+
+        $title= $_POST['title'];
+        $firstname = $_POST['first_name'];
+        $lastname = $_POST['last_name'];
+        $phone= $_POST['mobile_no'];
+        $email = $_POST['email'];
+        $id_type= $_POST['card-type'];
+        $id_number= $_POST['id_number'];
+
+        $agent= trim($_POST['agent']);
+        $date_added= trim($_POST['date']);
+        $number_of_plots= trim($_POST['number-of-plots']);
+        $total_amount= trim($_POST['total-amount']);
+        $amount_payed= trim($_POST['amount-payed']);
+        $amount_remaining= trim($_POST['amount-remaining']);
+        $plot_details= trim($_POST['plot-details']);
+        $allocation= trim($_POST['allocation']);
+        $site_plan= trim($_POST['site_plan']);
+        $cadastral_plan= trim($_POST['cadastral_plan']);
+        $search= trim($_POST['search']);
+        $lease_preparation= trim($_POST['lease_preparation']);
+        $registration_lc= trim($_POST['registration_lc']);
+
+
+        //Passport Picture
+        $old_passport_pic = $_POST['db_passport_pic'];
+        $newPicture = basename($_FILES["new_passport_pic"]["name"]);
+        if(empty($newPicture)){
+            $fileName = $old_passport_pic;
+        }else{
+            $fileName = $newPicture;
+            $tmp_name = $_FILES['new_passport_pic']['tmp_name'];
+
+            move_uploaded_file($tmp_name, "client-images/".$fileName);
+        }
+
+        try{   
+            $query = " UPDATE clients SET (title=:tile, firstname=:firstname, lastname=:lastname, phone=:mobile_no, email=:email, id_type=:id_type, id_number=:id_number, passport_pic=:passport_pic, agent=:agent, date_added=:date_added, number_of_plots=:number_of_plots, total_amount=:total_amount, amount_payed=:amount_payed, amount_remaining=:amount_remaining, plot_details=:plot_details, allocation=:allocation, site_plan=:site_plan, cadastral_plan=:cadastral_plan, search=:search, lease_preparation=:lease_preparation, registration_lc=:registration_lc) WHERE id=:id";
+
+            $stmt = $connect->prepare($query);
+
+            $stmt = $connect->prepare($query);
+
+            $stmt->execute([
+                ':title' => $title,
+                ':first_name' => $firstname,
+                ':last_name' => $lastname,
+                ':mobile_no' => $phone,
+                ':email' => $email,
+                ':id_type' => $id_type,
+                ':id_number' => $id_number,
+                ':passport_pic' => $fileName,  
+                ':agent' => $agent,
+                ':date_added' => $date_added,
+                ':number_of_plots' => $number_of_plots,
+                ':total_amount' => $total_amount,
+                ':amount_payed' => $amount_payed,
+                ':amount_remaining' => $amount_remaining,
+                ':plot_details' => $plot_details,
+                ':allocation' => $allocation,
+                ':site_plan' => $site_plan,
+                ':cadastral_plan' => $cadastral_plan,
+                ':search' => $search,
+                ':lease_preparation' => $lease_preparation,
+                ':registration_lc' => $registration_lc,
+                ':id' =>$update_id
+            ]);
+
+            $client_updated_id = $connect->lastInsertId();
+
+            $message = '
+                <div class="alert alert-success">
+                    Clients details Updated successfully
+                </div>
+            ';
+
+        }catch(PDOException $e){
+            $message = $e->getMessage();
+
+            $message = '
+                <div class="alert alert-danger">
+                    '.$e->getMessage().'
+                </div>
+            ';
+        }
+    }
+
+
+?>
 <body>
     <nav class="navbar-fixed">
         <div class="breadcrumbs">
@@ -80,11 +180,11 @@
             <div class="row">
                 <div class="col-lg-3 col-md-4 col-12">
                     <div class="dashboard-sidebar">
-                        <div class="user-image">
-                            <img src="assets/images/blog/blog1.jpg" alt="#">
-                            <h3><?php echo $row_user['fullname'] ?>
-                                <span><a href="javascript:void(0)"><?php echo $row_user['email'] ?> </a></span>
-                            </h3>
+                        <div class="m-3">
+                            <h5>
+                                <?php echo $row_user['fullname'] ?>
+                                <p><?php echo $row_user['email'] ?> </p>
+                            </h5>
                         </div>
                         <div class="dashboard-menu">
                             <ul>
@@ -105,7 +205,7 @@
                             <h3 class="block-title">Insert Client Details</h3>
                             <div class="inner-block">
                                 <div class="post-ad-tab">
-                                    <form method="POST" id="register_form">
+                                    <form method="POST" id="update_form">
                                         <?php echo $message; ?>
                                         <div class="row">
                                             <div class="col-12">
@@ -143,6 +243,7 @@
                                                                             <span id="error_title" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
+                                                                    <input name="client_id" style="display: none;" type="text" value="<?php echo $row['id'] ?>">
                                                                 </div>
                                                                 <div class="row">
                                                                     <div class="col-md-6 col-sm-12">
@@ -202,10 +303,25 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="row">
-                                                                    <div class="col-md-12">
+                                                                    <div class="col-md-8">
                                                                         <div class="form-group">
-                                                                            <label>Upload Passport Picture </label>
-                                                                            <input style="color: #690308; font-weight: bold" name="passport_pic" id="passport_pic" type="file" value="<?php echo $row['passport_pic']?>">
+                                                                            <label>Upload New Passport Picture </label>
+                                                                            <input style="color: #690308; font-weight: bold" name="new_passport_pic" id="passport_pic" type="file">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-md-4">
+                                                                        <div class="form-group">
+                                                                            <?php 
+                                                                                if(empty($row['passport_pic'])){
+                                                                                    echo '<p style="margin-top: 2rem; color: red; text-decoration: underline">No passport picture for this user </p>';
+                                                                                }else{
+                                                                                    echo '
+                                                                                        <img title="passport picture in database" style="width: 50px; height: 50px; object-fit: contain; margin-top: 1.7rem" class="img-fluid" src="client-images/'.$row['passport_pic'].'"  alt="passport picture">
+                                                                                    ';
+
+                                                                                }
+                                                                            ?>
+                                                                            <input style="display: none;" type="text" name="db_passport_pic" value="<?php echo $row['passport_pic'] ?>">
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -711,7 +827,7 @@
                 }else{
                     $('#btn_contact_details').attr("disabled", "disabled");
                     $(document).css('cursor', 'progress');
-                    $("#register_form").submit();
+                    $("#update_form").submit();
                 }
                 
             });
