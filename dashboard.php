@@ -1,4 +1,5 @@
 <?php include_once "include/head.php" ?>
+
 <?php
     session_start();
     $connect = new PDO("mysql:host=localhost;dbname=lhc_clients_db", "root", "");
@@ -15,6 +16,11 @@
     }else{
         header('location: index.php');
     }
+
+    $query = "SELECT *, COUNT(*) AS numrows FROM clients";
+    $stmt = $connect->prepare($query);
+    $stmt->execute();
+    $row = $stmt->fetch();
 ?>
 <body>
 
@@ -73,8 +79,8 @@
                                             <i class="lni lni-users"></i>
                                         </div>
                                         <h3>
-                                            340
-                                            <span>Total Customers</span>
+                                            <?php echo $row['numrows'] ?>
+                                            <span>Total Customers Purchased</span>
                                         </h3>
                                     </div>
 
@@ -86,8 +92,17 @@
                                             <i class="lni lni-money"></i>
                                         </div>
                                         <h3>
-                                            GHs. 23,000.00
-                                            <span>Balance</span>
+                                            <?php
+                                               include_once "php/config.php";
+                                               $query_ta = mysqli_query($conn, "SELECT * FROM clients");
+
+                                               $total_amount = 0;
+                                               while($num = mysqli_fetch_assoc($query_ta)){
+                                                    $total_amount += $num['total_amount'];
+                                                }
+                                                echo " GHS. ". $total_amount;
+                                            ?>
+                                            <span>Total Amount Paid By Clients</span>
                                         </h3>
                                     </div>
 
@@ -96,11 +111,20 @@
 
                                     <div class="single-list three">
                                         <div class="list-icon">
-                                            <i class="lni lni-emoji-sad"></i>
+                                            <i class="lni lni-money"></i>
                                         </div>
                                         <h3>
-                                            Ghs. 450,000.00
-                                            <span>Total Ammount</span>
+                                            <?php
+                                               include_once "php/config.php";
+                                               $query_tr = mysqli_query($conn, "SELECT * FROM clients");
+
+                                               $total_amount_remaining = 0;
+                                               while($num = mysqli_fetch_assoc($query_tr)){
+                                                    $total_amount_remaining += $num['amount_remaining'];
+                                                }
+                                                echo " GHS. ". $total_amount_remaining;
+                                            ?>
+                                            <span>Total Amount Remaining</span>
                                         </h3>
                                     </div>
 

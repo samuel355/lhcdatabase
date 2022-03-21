@@ -969,7 +969,7 @@ ol {
 }
 
 .section {
-    padding-top: 100px;
+    padding-top: 140px;
     padding-bottom: 100px;
     position: relative
 }
@@ -6721,7 +6721,7 @@ blockquote .shape {
 
 @media only screen and (min-width:768px) and (max-width:991px) {
     .section {
-        padding: 60px 0
+        padding-top: 170px;
     }
     .section-title {
         margin-bottom: 30px;
@@ -7007,9 +7007,7 @@ blockquote .shape {
 }
 
 @media only screen and (max-width:767px) {
-    .section {
-        padding: 50px 0
-    }
+    .section {}
     .section-title {
         margin-bottom: 25px;
         padding: 0 10px

@@ -88,10 +88,14 @@
         $lease_preparation= trim($_POST['lease_preparation']);
         $registration_lc= trim($_POST['registration_lc']);
 
+        if(empty($amount_payed)){
+            $amount_payed = 0;
+        }
 
         //Passport Picture
-        $old_passport_pic = $_POST['db_passport_pic'];
         $newPicture = basename($_FILES["new_passport_pic"]["name"]);
+        $old_passport_pic = $_POST['db_passport_pic'];
+
         if(empty($newPicture)){
             $fileName = $old_passport_pic;
         }else{
@@ -102,7 +106,7 @@
         }
 
         try{   
-            $query = " UPDATE clients SET (title=:tile, firstname=:firstname, lastname=:lastname, phone=:mobile_no, email=:email, id_type=:id_type, id_number=:id_number, passport_pic=:passport_pic, agent=:agent, date_added=:date_added, number_of_plots=:number_of_plots, total_amount=:total_amount, amount_payed=:amount_payed, amount_remaining=:amount_remaining, plot_details=:plot_details, allocation=:allocation, site_plan=:site_plan, cadastral_plan=:cadastral_plan, search=:search, lease_preparation=:lease_preparation, registration_lc=:registration_lc) WHERE id=:id";
+            $query = "UPDATE clients SET title=:title, firstname=:first_name, lastname=:last_name, phone=:mobile_no, email=:email, id_type=:id_type, id_number=:id_number, passport_pic=:passport_pic, agent=:agent, date_added=:date_added, number_of_plots=:number_of_plots, total_amount=:total_amount, amount_payed=:amount_payed, amount_remaining=:amount_remaining, plot_details=:plot_details, allocation=:allocation, site_plan=:site_plan, cadastral_plan=:cadastral_plan, search=:search, lease_preparation=:lease_preparation, registration_lc=:registration_lc WHERE id=:id";
 
             $stmt = $connect->prepare($query);
 
@@ -140,6 +144,7 @@
                     Clients details Updated successfully
                 </div>
             ';
+            header("location: users.php");
 
         }catch(PDOException $e){
             $message = $e->getMessage();
@@ -167,7 +172,7 @@
                     <div class="col-lg-6 col-md-6 col-12">
                         <ul class="breadcrumb-nav">
                             <li><a href="dashboard.php">Home</a></li>
-                            <li>Dashboard</li>
+                            <li>Update Clients Details</li>
                         </ul>
                     </div>
                 </div>
@@ -205,7 +210,7 @@
                             <h3 class="block-title">Insert Client Details</h3>
                             <div class="inner-block">
                                 <div class="post-ad-tab">
-                                    <form method="POST" id="update_form">
+                                    <form method="POST" id="update_form" enctype="multipart/form-data">
                                         <?php echo $message; ?>
                                         <div class="row">
                                             <div class="col-12">
@@ -233,7 +238,7 @@
                                                                             <div class="selector-head title-container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
                                                                                 <select style="color: #690308; font-weight: bold" name="title" id="title" class="user-chosen-select">
-                                                                                    <option value="<?php echo $row['title']?>"><?php echo $row['title']?></option>
+                                                                                    <option selected value="<?php echo $row['title']?>"> <?php echo $row['title']?> </option>
                                                                                     <option value="Mr.">Mr.</option>
                                                                                     <option value="Mrs.">Mrs.</option>
                                                                                     <option value="Miss.">Miss</option>
@@ -284,7 +289,7 @@
                                                                             <div class="selector-head id_type_container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
                                                                                 <select style="color: #690308; font-weight: bold" name="card-type" class="user-chosen-select" id="id_type">
-                                                                                    <option value="<?php echo $row['id_type']?>"><?php echo $row['id_type']?></option>
+                                                                                    <option selected value="<?php echo $row['id_type']?>" ><?php echo $row['id_type']?></option>
                                                                                     <option value="voter-id">Voter ID </option>
                                                                                     <option value="passport">Passport</option>
                                                                                     <option value="driver-license">Drivers' License</option>
@@ -349,7 +354,7 @@
                                                                             <div class="selector-head agent-container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
                                                                                 <select style="color: #690308; font-weight: bold"  name="agent" class="user-chosen-select" id="agent">
-                                                                                    <option value="<?php echo $row['agent']?>" > <?php echo $row['agent'] ?></option>
+                                                                                    <option selected value="<?php echo $row['agent']?>" > <?php echo $row['agent'] ?></option>
                                                                                     <option value="lhc">L.H.C</option>
                                                                                     <option value="gloria">Gloria</option>
                                                                                     <option value="nanaB">Nana B</option>
@@ -373,7 +378,7 @@
                                                                             <div class="selector-head number_of_plots_container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
                                                                                 <select style="color: #690308; font-weight: bold"  name="number-of-plots" id="number-of-plots" name="number-of-plots" class="user-chosen-select">
-                                                                                    <option value="<?php echo $row['number_of_plots']?>" ><?php echo $row['number_of_plots']?></option>
+                                                                                    <option selected value="<?php echo $row['number_of_plots']?>" ><?php echo $row['number_of_plots']?></option>
                                                                                     <option value="1">1</option>
                                                                                     <option value="2">2</option>
                                                                                     <option value="3">3</option>

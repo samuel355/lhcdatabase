@@ -16,7 +16,13 @@
     }else{
         header('location: index.php');
     }
+
+    $count_query = "SELECT *, COUNT(*) AS numofclients FROM clients";
+    $stmt_count = $connect->prepare($count_query);
+    $stmt_count->execute();
+    $rowcount = $stmt_count->fetch();
 ?>
+
 <body>
     <nav class="navbar-fixed">
         <div class="breadcrumbs">
@@ -30,7 +36,7 @@
                     <div class="col-lg-6 col-md-6 col-12">
                         <ul class="breadcrumb-nav">
                             <li><a href="dashboard.php">Home</a></li>
-                            <li>Dashboard</li>
+                            <li>Clients</li>
                         </ul>
                     </div>
                 </div>
@@ -67,11 +73,11 @@
                             <h3 class="block-title">Adense Purchasers</h3>
                             <nav class="list-nav">
                                 <ul>
-                                    <li class="active"><a href="javascript:void(0)">All Purchasers <span>42</span></a></li>
+                                    <li class="active"><a href="javascript:void(0)">All Purchasers <span><?php echo $rowcount['numofclients'] ?></span></a></li>
                                 </ul>
-                                <form action="">
+                                <form action="" class="search_client" >
                                     <div class="form-group">
-                                        <input style="margin: 2rem 2rem 0rem 2rem; width: 85%; padding: .8rem " type="search" name="search-client" id="search-client" placeholder="Search Client">
+                                        <input style="margin: 2rem 2rem 0rem 2rem; width: 85%; padding: .8rem " type="search" name="search_client" id="search_client" placeholder="Search Client">
                                     </div>
                                 </form>
                             </nav>
@@ -95,81 +101,41 @@
                                     </div>
                                 </div>
 
-                                <?php
-                                    include_once "php/config.php";
+                                <div class="single-item-list" id="item_div">
 
-                                    $sql = "SELECT * FROM clients ORDER BY id DESC";
-                                    $query = mysqli_query($conn, $sql);
-                                    $output = "";
-
-                                    if(mysqli_num_rows($query) == 0){
-                                        $output .= " No Clients have been added yet";
-                                    }elseif(mysqli_num_rows($query) > 0){
-                                        while($row = mysqli_fetch_assoc($query)){
-                                            if($row['amount_payed'] == ''){
-                                                $amount_payed = 0;
-                                            }
-                                            
-                                            
-                                            $amount_remaining = $row['total_amount'] - $amount_payed;
-                                            $output .= '
-                                                <div class="single-item-list">
-                                                    <div class="row align-items-center">
-                                                        <div class="col-lg-4 col-md-4 col-12">
-                                                            <div class="item-image">
-                                                                <img src="assets/images/blog/blog1.jpg" alt="#">
-                                                                <div class="content">
-                                                                    <h3  class="title"><a style="color: #690308; font-weight: bold" href="javascript:void(0)"><span class="text-dark">Name: </span> ' .$row['title']. " " . $row['firstname']. " " . $row['lastname'].'</a></h3>
-                                                                    <p style="color: #690308; font-weight: bold" class="price"> <span class="text-dark">Phone: </span> '.$row['phone'].' </p>
-                                                                    <p style="color: #690308; font-weight: bold"><span class="text-dark">Email: </span> '.$row['email'].' </p>
-                                                                    <p style="color: #690308; font-weight: bold"><span class="text-dark">ID Type: </span> '.$row['id_type'].' </p>
-                                                                    <p style="color: #690308; font-weight: bold"><span class="text-dark">ID Number: </span> '.$row['id_number'].' </p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-3 col-md-3 col-12">
-                                                            <div class="content">
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Agent: </span> '.$row['agent'].'</p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Plots: </span> '.$row['number_of_plots'].' </p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Total Amount: </span> GHS. '.$row['total_amount'].' </p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Amount Payed: </span> GHS. '.$row['amount_payed'].' </p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Amount Remaining: </span> GHS. '.$amount_remaining.' </p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Plot Details: </span> '.$row['plot_details'].' </p>
-                                                            </div>
-                                                        </div>
-                
-                                                        <div class="col-lg-3 col-md-3 col-12">
-                                                            <div class="content">
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Allocation: </span> '.$row['allocation'].'</p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Site Plan: </span> '.$row['site_plan'].'</p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Search: </span> '.$row['search'].' </p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Cadastral Plan: </span> '.$row['cadastral_plan'].' </p>
-                                                                <p style="color: #690308; font-weight: bold"><span class="text-dark">Registration: </span> '.$row['registration_lc'].'</p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-2 col-md-2 col-12">
-                                                            <ul class="action-button">
-                                                                <li title="Edit"><a href="update-client.php?id='.$row['id'].'"><i class="lni lni-pencil"></i></a></li>
-                                                                <li title="View/Update"><a href="update-client.php?id='.$row['id'].'"><i class="lni lni-eye"></i></a></li>
-                                                                <li title="Delete"><a href="javascript:void(0)"><i class="lni lni-close"></i></a></li>
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ';
-                                        }
-                                    }
-                                    echo $output;
-                                ?>
-
-
+                                </div>
+                                
+                                
                                 <div class="pagination left">
+                                    <?php
+                                        include_once "php/config.php"; 
+                                        $limit = 4;
+                                        $sql = "SELECT COUNT(id) FROM clients";  
+                                        $rs_result = mysqli_query($conn, $sql);  
+                                        $row = mysqli_fetch_row($rs_result);  
+                                        $total_records = $row[0];  
+                                        $total_pages = ceil($total_records / $limit);
+                                        
+                                        
+                                    ?>
                                     <ul class="pagination-list">
-                                        <li><a href="javascript:void(0)">1</a></li>
-                                        <li class="active"><a href="javascript:void(0)">2</a></li>
-                                        <li><a href="javascript:void(0)">3</a></li>
-                                        <li><a href="javascript:void(0)">4</a></li>
-                                        <li><a href="javascript:void(0)"><i class="lni lni-chevron-right"></i></a></li>
+                                        <?php 
+                                            if(!empty($total_pages)){
+                                                for($i=1; $i<=$total_pages; $i++){
+                                                    if($i == 1){
+                                                        ?>
+                                                            <li class="pageitem active" id="<?php echo $i;?>"><a href="JavaScript:Void(0);" data-id="<?php echo $i;?>" class="page-link" ><?php echo $i;?></a></li>
+                                                                                
+                                                        <?php 
+                                                    }
+                                                    else{
+                                                        ?>
+                                                            <li class="pageitem" id="<?php echo $i;?>"><a href="JavaScript:Void(0);" class="page-link" data-id="<?php echo $i;?>"><?php echo $i;?></a></li>
+                                                        <?php
+                                                    }
+                                                }
+                                            }
+                                        ?>
                                     </ul>
                                 </div>
 
@@ -181,6 +147,29 @@
             </div>
         </div>
     </section>
+
+    <!--Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-center" id="exampleModalLabel">Delete User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <h4 class="text-center">Are you sure you want to delete this user</h4>
+            </div>
+            <div class="modal-footer">
+                <form action="" >
+                    <div class="button">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-danger confirm_delete">Delete</button>
+                    </div>
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
 
     <style>
         .action-button{
@@ -215,6 +204,77 @@
     <script src="assets/js/glightbox.min.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script>
+        const searchBar = document.querySelector("#search_client"),
+        clientList = document.querySelector(".single-item-list");
+
+        searchBar.onkeyup = () =>{
+            let searchTerm = searchBar.value;
+            let xhr = new XMLHttpRequest();
+
+            xhr.open("POST", "php/search.php", true);
+            xhr.onload = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        let data = xhr.response;
+                        clientList.innerHTML = data;
+                    }
+                }
+            }
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("searchTerm=" + searchTerm);
+        }
+
+        ////Delete Client
+
+        $('.delete_client').on('click', function (e) {
+            var id = $(this).attr('data-id');
+            console.log(id)
+            $('.confirm_delete').attr('data-id',id);
+        });
+        
+        $(".confirm_delete").on('click', function (e) {
+            var id = $(this).attr('data-id');
+            console.log(id);
+            $.ajax({
+                url: 'php/delete.php',
+                type: 'GET',
+                data: {id: id},
+                error: function() {
+                    alert('Something is wrong');
+                },
+                success: function(data) {
+                    $("#"+id).remove();
+                    window.location.reload(true);
+                    
+                }
+            });
+        });
+
+        //pagination
+        $(".single-item-list").load("php/pagination.php?page=1");
+		$(".page-link").click(function(){
+			var id = $(this).attr("data-id");
+			var select_id = $(this).parent().attr("id");
+            const itemDiv = document.getElementById("#item_div");
+			$.ajax({
+				url: "php/pagination.php",
+				type: "GET",
+				data: {
+					page : id
+				},
+				cache: false,
+				success: function(dataResult){
+					$(".single-item-list").html(dataResult);
+					$(".pageitem").removeClass("active");
+					$("#"+select_id).addClass("active");
+					
+				}
+			});
+		});
+
+
+    </script>
 </body>
 
 </html>

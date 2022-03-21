@@ -120,7 +120,7 @@
                     <div class="col-lg-6 col-md-6 col-12">
                         <ul class="breadcrumb-nav">
                             <li><a href="dashboard.php">Home</a></li>
-                            <li>Dashboard</li>
+                            <li>Add User</li>
                         </ul>
                     </div>
                 </div>
@@ -341,7 +341,7 @@
                                                                             <span class="error_amount_payed text-danger"></span>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-md-6">
+                                                                    <div class="col-md-6" style="cursor:not-allowed">
                                                                         <div class="form-group">
                                                                             <label for="amount-remaining">Amount Remaining</label>
                                                                             <input readonly name="amount-remaining" id="amount-remaining" type="text">

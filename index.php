@@ -12,10 +12,9 @@
         ]);
 
         $row_user = $stmt_user->fetch();
-    }else{
-        header('location: index.php');
     }
 ?>
+
 <body>
 
     <nav class="navbar-fixed">
@@ -29,8 +28,7 @@
                     </div>
                     <div class="col-lg-6 col-md-6 col-12">
                         <ul class="breadcrumb-nav">
-                            <li><a href="dashboard.php">Home</a></li>
-                            <li>Login</li>
+                            <li><a href="#">Login</a></li>
                         </ul>
                     </div>
                 </div>
@@ -44,6 +42,7 @@
                 <div class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-12">
                     <div class="form-head">
                         <h4 class="title">Login</h4>
+                        
                         <form action="#!" method="post" class="login-form">
 
                             <div class="form-group">
@@ -74,12 +73,15 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-6 col-md-6 col-12">
-                                        <a href="javascript:void(0)" class="lost-pass">Lost your password?</a>
+                                        <a href="lost-pass.php" class="lost-pass">Lost your password?</a>
                                     </div>
                                 </div>
                             </div>
                             <div class="button">
                                 <button type="submit" class="btn login-button">Login Now</button>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12 text-right"><a href="signup.php" class="lost-pass text-dark">Don't have an account yet ?</a></div>
                             </div>
                         </form>
                     </div>
