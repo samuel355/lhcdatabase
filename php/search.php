@@ -4,7 +4,7 @@
 
     $searchTerm = mysqli_real_escape_string($conn, $_POST['searchTerm']);
 
-    $sql = "SELECT * FROM clients WHERE (firstname LIKE '%{$searchTerm}%' OR lastname LIKE '%{$searchTerm}%' ) ";
+    $sql = "SELECT * FROM clients WHERE (firstname LIKE '%{$searchTerm}%' OR lastname LIKE '%{$searchTerm}%'  OR phone LIKE '%{$searchTerm}%'  OR plot_details LIKE '%{$searchTerm}%'  OR email LIKE '%{$searchTerm}%' ) ";
     $output = "";
     $query = mysqli_query($conn, $sql);
     if(mysqli_num_rows($query) > 0){

@@ -1,6 +1,9 @@
 <?php include_once "include/head.php" ?>
 <?php
     session_start();
+    if(!isset($_SESSION['admin'])){
+        header('location: index.php');
+    }
 ?>
 
 <body>
@@ -61,10 +64,8 @@
                                 <input name="re-password" type="password" id="re-password">
                             </div>
                             <div class="button">
-                                <button id="signup-button" type="submit" class="btn signup-button">Registration</button>
+                                <button id="signup-button" type="submit" class="btn signup-button">Register</button>
                             </div>
-                            <p class="outer-link">Already have an account? <a href="index.php"> Login Now</a>
-                            </p>
                         </form>
                     </div>
                 </div>

@@ -80,9 +80,6 @@
                             <div class="button">
                                 <button type="submit" class="btn login-button">Login Now</button>
                             </div>
-                            <div class="row mt-3">
-                                <div class="col-12 text-right"><a href="signup.php" class="lost-pass text-dark">Don't have an account yet ?</a></div>
-                            </div>
                         </form>
                     </div>
                 </div>
@@ -116,15 +113,22 @@
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     if (xhr.status === 200) {
                         let data = xhr.response;
-                        if (data === "success") {
+                        if (data === "success-user") {
+                            successText.style.display = "block";
+                            successText.textContent = data;
+
+                            setTimeout(function(){
+                                $(".successText").fadeOut()
+                            },3000);
+                            location.href = 'users.php';
+                        }else if(data === "success-admin"){
                             successText.style.display = "block";
                             successText.textContent = data;
 
                             setTimeout(function(){
                                 $(".successText").fadeOut()
                             },3000)
-
-                            location.href = "dashboard.php";
+                            location.href = 'dashboard.php'
                         } else {
                             errorText.style.display = "block";
                             errorText.textContent = data;

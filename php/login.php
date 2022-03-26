@@ -10,10 +10,18 @@
             $row = mysqli_fetch_assoc($sql);
             $user_pass = md5($password);
             $enc_pass = $row['password'];
+            $utype = $row['utype'];
             if($user_pass === $enc_pass){
 
-                $_SESSION['unique_id'] = $row['unique_id'];
-                echo "success";
+                if($utype == 'user'){
+                    $_SESSION['unique_id'] = $row['unique_id'];
+                    $_SESSION['user'] = 'user';
+                    echo "success-user";
+                }else if($utype == 'admin'){
+                    $_SESSION['unique_id'] = $row['unique_id'];
+                    $_SESSION['admin'] = 'admin';
+                    echo "success-admin";
+                }
                 
             }else{
                 echo "Email or Password is Incorrect!";

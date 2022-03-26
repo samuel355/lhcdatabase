@@ -51,15 +51,23 @@
                     <div class="dashboard-sidebar">
                         <div class="m-3">
                             <h5>
-                                <?php echo $row_user['fullname'] ?>
-                                <p><?php echo $row_user['email'] ?> </p>
+                                <?php echo $row_user['fullname']; ?>
+                                <p><?php echo $row_user['email']; ?> </p>
                             </h5>
                         </div>
                         <div class="dashboard-menu">
                             <ul>
-                                <li><a href="dashboard.php" ><i class="lni lni-dashboard"></i> Dashboard</a></li>
-                                <li><a class="active" href="users.php"><i class="lni lni-users "></i> Clients</a></li>
+                                <?php
+        
+                                    if($row_user['utype'] == 'admin'){
+                                        echo ' 
+                                            <li><a href="dashboard.php" ><i class="lni lni-dashboard"></i> Dashboard</a></li>
+                                        ';
+                                    }
+                                ?>
+                                <li><a class="active" href="users.php"><i class="lni lni-users "></i>All Clients</a></li>
                                 <li><a href="add-user.php"><i class="lni lni-circle-plus"></i> Add Client</a></li>
+                                <li><a target="_blank" href="https://plots.landandhomesconsult.org"><i class="lni lni-circle-pls"></i> Adense Plots</a></li>
                             </ul>
                             <div class="button">
                                 <a class="btn" href="logout.php">Logout</a>

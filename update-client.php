@@ -193,10 +193,18 @@
                         </div>
                         <div class="dashboard-menu">
                             <ul>
-                                <li><a href="dashboard.php" ><i class="lni lni-dashboard"></i> Dashboard</a></li>
-                                <li><a href="users.php"><i class="lni lni-users "></i> Clients</a></li>
+                                <?php
+    
+                                    if($row_user['utype'] == 'admin'){
+                                        echo ' 
+                                            <li><a href="dashboard.php" ><i class="lni lni-dashboard"></i> Dashboard</a></li>
+                                        ';
+                                    }
+                                ?>
+                                <li><a href="users.php"><i class="lni lni-users "></i>All Clients</a></li>
                                 <li><a href="add-user.php"><i class="lni lni-circle-plus"></i> Add Client</a></li>
                                 <li><a class="active" href="add-user.php"><i class="lni lni-circle-plus"></i> Update User</a></li>
+                                <li><a target="_blank" href="https://plots.landandhomesconsult.org"><i class="lni lni-circle-pls"></i> Adense Plots</a></li>
                             </ul>
                             <div class="button">
                                 <a class="btn" href="logout.php">Logout</a>
@@ -237,7 +245,7 @@
                                                                             <label>Title * </label>
                                                                             <div class="selector-head title-container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
-                                                                                <select style="color: #690308; font-weight: bold" name="title" id="title" class="user-chosen-select">
+                                                                                <select disabled style="color: #690308; font-weight: bold" name="title" id="title" class="user-chosen-select">
                                                                                     <option selected value="<?php echo $row['title']?>"> <?php echo $row['title']?> </option>
                                                                                     <option value="Mr.">Mr.</option>
                                                                                     <option value="Mrs.">Mrs.</option>
@@ -254,14 +262,14 @@
                                                                     <div class="col-md-6 col-sm-12">
                                                                         <div class="form-group">
                                                                             <label>First Name(s) *</label>
-                                                                            <input style="color: #690308; font-weight: bold" class="first_name_container" name="first_name" id="first_name" type="text" value="<?php echo $row['firstname']?>" >
+                                                                            <input readonly style="color: #690308; font-weight: bold" class="first_name_container" name="first_name" id="first_name" type="text" value="<?php echo $row['firstname']?>" >
                                                                             <span id="error_first_name" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6 col-sm-12">
                                                                         <div class="form-group">
                                                                             <label>Surname/Lastname(s) *</label>
-                                                                            <input style="color: #690308; font-weight: bold" class="last_name_container" name="last_name" id="last_name" type="text" value="<?php echo $row['lastname']?>" >
+                                                                            <input readonly style="color: #690308; font-weight: bold" class="last_name_container" name="last_name" id="last_name" type="text" value="<?php echo $row['lastname']?>" >
                                                                             <span id="error_last_name" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
@@ -270,14 +278,14 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Phone *</label>
-                                                                            <input style="color: #690308; font-weight: bold" type="text" name="mobile_no" id="mobile_no" class="form-control" value="<?php echo $row['phone']?>" />
+                                                                            <input readonly style="color: #690308; font-weight: bold" type="text" name="mobile_no" id="mobile_no" class="form-control" value="<?php echo $row['phone']?>" />
                                                                             <span id="error_mobile_no" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>email</label>
-                                                                            <input style="color: #690308; font-weight: bold" name="email" id="email" type="text" value="<?php echo $row['email']?>">
+                                                                            <input readonly style="color: #690308; font-weight: bold" name="email" id="email" type="text" value="<?php echo $row['email']?>">
                                                                             <span id="error_email" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
@@ -288,7 +296,7 @@
                                                                             <label>ID Type * </label>
                                                                             <div class="selector-head id_type_container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
-                                                                                <select style="color: #690308; font-weight: bold" name="card-type" class="user-chosen-select" id="id_type">
+                                                                                <select disabled style="color: #690308; font-weight: bold" name="card-type" class="user-chosen-select" id="id_type">
                                                                                     <option selected value="<?php echo $row['id_type']?>" ><?php echo $row['id_type']?></option>
                                                                                     <option value="voter-id">Voter ID </option>
                                                                                     <option value="passport">Passport</option>
@@ -302,7 +310,7 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>ID Number * </label>
-                                                                            <input style="color: #690308; font-weight: bold" name="id_number" type="text" placeholder="ID Number" id="id_number" value="<?php echo $row['id_number']?>" >
+                                                                            <input readonly style="color: #690308; font-weight: bold" name="id_number" type="text" placeholder="ID Number" id="id_number" value="<?php echo $row['id_number']?>" >
                                                                             <span id="error_id_number" class="text-danger"></span>
                                                                         </div>
                                                                     </div>
@@ -353,7 +361,7 @@
                                                                             <label>Agent </label>
                                                                             <div class="selector-head agent-container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
-                                                                                <select style="color: #690308; font-weight: bold"  name="agent" class="user-chosen-select" id="agent">
+                                                                                <select disabled style="color: #690308; font-weight: bold"  name="agent" class="user-chosen-select" id="agent">
                                                                                     <option selected value="<?php echo $row['agent']?>" > <?php echo $row['agent'] ?></option>
                                                                                     <option value="lhc">L.H.C</option>
                                                                                     <option value="gloria">Gloria</option>
@@ -366,7 +374,7 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label>Date *</label>
-                                                                            <input style="color: #690308; font-weight: bold"  name="date" type="date" id="date" value="<?php echo $row['date_added']?>" >
+                                                                            <input readonly style="color: #690308; font-weight: bold"  name="date" type="date" id="date" value="<?php echo $row['date_added']?>" >
                                                                             <span class="error_date text-danger"></span>
                                                                         </div>
                                                                     </div>
@@ -377,7 +385,7 @@
                                                                             <label>Number of Plots </label>
                                                                             <div class="selector-head number_of_plots_container">
                                                                                 <span class="arrow"><i class="lni lni-chevron-down"></i></span>
-                                                                                <select style="color: #690308; font-weight: bold"  name="number-of-plots" id="number-of-plots" name="number-of-plots" class="user-chosen-select">
+                                                                                <select disabled style="color: #690308; font-weight: bold"  name="number-of-plots" id="number-of-plots" name="number-of-plots" class="user-chosen-select">
                                                                                     <option selected value="<?php echo $row['number_of_plots']?>" ><?php echo $row['number_of_plots']?></option>
                                                                                     <option value="1">1</option>
                                                                                     <option value="2">2</option>
@@ -397,7 +405,7 @@
                                                                     <div class="col-md-6">
                                                                         <div class="form-group">
                                                                             <label for="total-amount">Total Amount</label>
-                                                                            <input style="color: #690308; font-weight: bold"  name="total-amount" readonly id="total-amount" type="text" value="<?php echo $row['total_amount']?>">
+                                                                            <input readonly style="color: #690308; font-weight: bold"  name="total-amount" readonly id="total-amount" type="text" value="<?php echo $row['total_amount']?>">
                                                                             <span class="error_total_amount text-danger"></span>
                                                                         </div>
                                                                     </div>
@@ -422,7 +430,7 @@
                                                                     <div class="col-md-12">
                                                                         <div class="form-group mt-30">
                                                                             <label>Plot Details</label>
-                                                                            <textarea style="color: #690308; font-weight: bold"  class="plot_details_container" name="plot-details" id="plot-details" placeholder="Plot Details "> <?php echo $row['plot_details']?></textarea>
+                                                                            <textarea disabled style="color: #690308; font-weight: bold"  class="plot_details_container" name="plot-details" id="plot-details" placeholder="Plot Details "> <?php echo $row['plot_details']?></textarea>
                                                                             <span class="error_plot_details text-danger"></span>
                                                                         </div>
                                                                     </div>
